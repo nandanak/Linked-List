@@ -41,13 +41,14 @@ void Linkedlist::insertbeg(int data)
   newnode->sdata(data);
   if(temp==NULL)
   {
-    newnode->snext(NULL);
     head=newnode;
+    newnode->snext(head);
+    return;
   }
   else
   {
     newnode->snext(head);
-    while(temp!=head)
+    while(temp->Next()!=head)
     {
       temp=temp->Next();
     }
@@ -60,21 +61,30 @@ void Linkedlist::insertpos(int p,int data)
   Node* temp=head;
   Node* newnode = new Node();
   newnode->sdata(data);
-  if(temp==NULL)
-  {
-    head=newnode;
-    newnode->snext(NULL);
-  }
-  else
+  if(p==1)
+  insertbeg(data);
+  else if(temp!=NULL&&p>1)
   {
     int i=1;
     while(i<p-1){
       temp=temp->Next();
       i++;
     }
+    if(temp==head)
+    {
+     cout<<"Invalid position";
+     return;
+    }
+    else if(temp->Next()==head)
+    {
+     insertend(data);
+     return;
+    }
     newnode->snext(temp->Next());
     temp->snext(newnode);
   }
+  else
+  cout<<"Invalid position";
 }
 void Linkedlist::insertend(int data)
 {
@@ -84,11 +94,12 @@ void Linkedlist::insertend(int data)
  if(temp==NULL)
  {
    head=newnode;
-   newnode->snext(NULL);
+   newnode->snext(head);
+   return;
  }
  else
  {
-   while(temp!=head){
+   while(temp->Next()!=head){
      temp=temp->Next();
    }
    temp->snext(newnode);
@@ -105,7 +116,11 @@ void Linkedlist::deletebeg()
   }
   else
   {
-    head=temp->Next();
+    while(temp->Next()!=head){
+      temp=temp->Next();
+    }
+    temp->snext(head->Next());
+    head=head->Next();
   }
 }
 void Linkedlist::deletepos(int p)
@@ -116,17 +131,32 @@ void Linkedlist::deletepos(int p)
     cout<<"The list is empty";
     return;
   }
+  else if(p==1)
+  {
+    deletebeg();
+    return;
+  }
   else
   {
     int i=1;
-    while(i<p-1){
+    while(i<p-1&&temp->Next()->Next()!=head){
       temp=temp->Next();
       i++;
     }
-    if(temp->Next()!=head)
-    temp->snext(temp->Next()->Next());
+    if(temp->Next()->Next()!=head)
+    {
+      temp->snext(temp->Next()->Next());
+    }
+    else if(temp->Next()->Next()==head&&i==(p-1))
+    {
+      deleteend();
+      return;
+    }
     else
-    deleteend();
+    {
+     cout<<"Invalid position";
+     return;
+    }
   }
 }
 void Linkedlist::deleteend()
@@ -142,6 +172,7 @@ void Linkedlist::deleteend()
     while(temp->Next()->Next()!=head){
       temp=temp->Next();
     }
+    delete(temp->Next());
     temp->snext(head);
   }
 }
@@ -152,14 +183,16 @@ void Linkedlist::display()
   if(temp==NULL)
   {
     cout<<"NULL";
+    return;
   }
   else
   {
-  temp=temp->Next();
-  while(temp!=head){
+  while(temp->Next()!=head){
     cout<<temp->Data()<<"->";
     temp=temp->Next();
   }
+  cout<<temp->Data()<<"->";
+  temp=temp->Next();
   cout<<temp->Data()<<"->....";
  }
 }
