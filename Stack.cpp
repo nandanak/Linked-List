@@ -16,7 +16,7 @@ public:
     return data;
   };
   Node* Next(){
-    return next;
+    return next;3
   };
 };
 class Stacklist{

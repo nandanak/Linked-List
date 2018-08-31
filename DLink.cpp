@@ -72,6 +72,11 @@ void Linkedlist::insertpos(int p,int data)
     newnode->sprev(NULL);
     head=newnode;
   }
+  else if(p==1)
+  {
+    insertbeg(data);
+    return;
+  }
   else
   {
   int i=1;
